@@ -19,17 +19,16 @@ router.get("/users", (req, res) => {
         if (err) {
             return res.status(500).send({ error: "Server error" });
         }
-        // const userList = users.map(({ _id, created, email, firstname, lastname, picture, username }) => {
-        //     return { _id, created, email, firstname, lastname, picture, username }
-        // });
-        // return res.status(200).send(userList);
-        return res.status(200).send(users);
+        const userList = users.map(({ _id, created, email, firstname, lastname, picture, username }) => {
+            return { _id, created, email, firstname, lastname, picture, username }
+        });
+        return res.status(200).send(userList);
     });
 });
 
 // Get user by ID
 router.get("/user/:id", function (req, res) {
-    User.findById(req.params.id, (err, user) => {
+    User.findById(req.params.id, (err, user: IUser) => {
         if (err) {
             return res.status(500).send({ error: "Server error" });
         }

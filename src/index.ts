@@ -1,10 +1,9 @@
 import http from 'http'
 import express from 'express'
 import dotenv from 'dotenv'
+import dbConnect from './database/connect'
 import userRouter from './routes/user'
 import taskRouter from './routes/task'
-import dbConnect from './database/connect'
-
 
 dotenv.config()
 dbConnect()

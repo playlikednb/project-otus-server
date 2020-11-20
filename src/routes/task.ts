@@ -15,7 +15,7 @@ interface ITask {
 
 // Get all tasks
 router.get("/tasks", (req, res) => {
-    Task.find((err, tasks) => {
+    Task.find((err, tasks: [ITask]) => {
         if (err) {
             return res.status(500).send({ error: "Server error" });
         }
@@ -25,7 +25,7 @@ router.get("/tasks", (req, res) => {
 
 // Get task by ID
 router.get("/task/:id", function (req, res) {
-    Task.findById(req.params.id, (err, task) => {
+    Task.findById(req.params.id, (err, task: ITask) => {
         if (err) {
             return res.status(500).send({ error: "Server error" });
         }
