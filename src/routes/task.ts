@@ -2,6 +2,7 @@ import express from 'express'
 import { Task, User } from '../database/schema';
 import { IUser } from './user';
 const router = express.Router();
+import {io} from '../index';
 
 interface ITask {
     title: string;
@@ -47,6 +48,8 @@ router.post("/api/task", function (req, res) {
                 return res.status(500).send({ error: "Server error" });
             }
         }
+
+        io.sockets.emit("taskCreated", task);
         return res.status(200).send(task);
     });
 });
@@ -61,6 +64,7 @@ router.patch("/api/task/:id", function (req, res) {
         if (err) {
             return res.status(500).send({ error: "Server error: " + err });
         }
+        io.sockets.emit("taskUpdated", {id, updated: updateObject});
         return res.status(200).send(task);
     });
 });
@@ -73,7 +77,7 @@ router.delete("/api/task/:id", function (req, res) {
             return res.status(500).send({ error: "Server error" });
         }
         if (!user) {
-            return res.status(404).send({ error: "Not found user with ID: " + req.params.userId });
+            return res.status(404).send({ error: "No user with such ID " + req.params.userId });
         }
         if (user.level < 3) {
             return res.status(403).send({ error: "You don't have permission" });
@@ -84,7 +88,7 @@ router.delete("/api/task/:id", function (req, res) {
                 return res.status(500).send({ error: "Server error" });
             }
             if (!task) {
-                return res.status(404).send({ error: "No task with such ID" });
+                return res.status(404).send({ error: "No task with such ID " + req.params.id });
             }
             return res.status(200).send(task);
         });

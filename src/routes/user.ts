@@ -3,6 +3,7 @@ import { User } from '../database/schema';
 const router = express.Router();
 
 export interface IUser {
+    _id: string;
     username: string;
     firstname: string;
     lastname: string;
@@ -14,11 +15,15 @@ export interface IUser {
 }
 
 router.get("/users", (req, res) => {
-    User.find((err, tasks) => {
+    User.find((err, users: [IUser]) => {
         if (err) {
             return res.status(500).send({ error: "Server error" });
         }
-        return res.status(200).send(tasks);
+        // const userList = users.map(({ _id, created, email, firstname, lastname, picture, username }) => {
+        //     return { _id, created, email, firstname, lastname, picture, username }
+        // });
+        // return res.status(200).send(userList);
+        return res.status(200).send(users);
     });
 });
 
@@ -52,8 +57,8 @@ router.post("/api/user", function (req, res) {
 });
 
 // Delete user
-router.delete("/api/user", function (req, res) {
-    User.findByIdAndDelete(req.body.id, (err, user) => {
+router.delete("/api/user/:id", function (req, res) {
+    User.findByIdAndDelete(req.params.id, (err, user) => {
         if (err) {
             return res.status(500).send({ error: "Server error" });
         }
